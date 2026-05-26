@@ -57,3 +57,21 @@ def update(mu, sigma, z, H, R):
     K = sigma@H.T@np.linalg.inv(H@sigma@H.T+R)
     new_mu = mu + K@innovation
     new_sigma = (np.eye(3)-K@H)@sigma
+
+    return new_mu, new_sigma
+
+def compute_H(mu, landmark):
+    """For a landmark at known position (lx, ly), robot at (x, y, θ) — the expected measurement is:
+        expected_distance = sqrt((lx-x)² + (ly-y)²)
+        expected_angle = atan2(ly-y, lx-x) - θ"""
+    x, y, theta = mu
+    lx, ly = landmark
+    dx = lx - x
+    dy = ly - y
+    d = np.sqrt(dx**2 + dy**2)
+    
+    H = np.array([
+        [-dx/d,  -dy/d,  0],
+        [dy/d**2,-dx/d**2,-1]
+    ])
+    return H
