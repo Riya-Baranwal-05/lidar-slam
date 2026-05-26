@@ -55,3 +55,4 @@ if __name__ == "__main__":
     print(f"Number of beams returned: {len(scan)}")
     print(f"Min distance: {min(scan):.2f}")
     print(f"Max distance: {max(scan):.2f}")
+    print(scan)
