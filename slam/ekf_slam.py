@@ -34,12 +34,12 @@ def predict(mu, sigma, u, Q):
     return new_mu,new_sigma
 
 
-def update(mu, sigma, z, H, R):
+def update(mu, sigma, innovation, H, R):
     """
     Inputs:
         mu: Predicted state from the prediction step
         sigma: new predicted covariance
-        z: actual measurement of the sensor
+        innovation: difference between actual and expected measurement
         H: Measurement Jacobian Matrix
         R: Measurement Noise Covariance
 
@@ -53,11 +53,10 @@ def update(mu, sigma, z, H, R):
     """
    
 
-    innovation = z - H@mu
-    K = sigma@H.T@np.linalg.inv(H@sigma@H.T+R)
-    new_mu = mu + K@innovation
-    new_sigma = (np.eye(3)-K@H)@sigma
-
+    
+    K = sigma @ H.T @ np.linalg.inv(H @ sigma @ H.T + R)
+    new_mu = mu + K @ innovation
+    new_sigma = (np.eye(3) - K @ H) @ sigma
     return new_mu, new_sigma
 
 def compute_H(mu, landmark):
